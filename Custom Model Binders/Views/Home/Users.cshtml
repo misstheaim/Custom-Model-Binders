@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<h2>Person Form</h2>
+<form method="post" asp-action="Person" asp-controller="Api">
+    <label>User Name:</label><br />
+    <input type="text" name="Name" /><br />
+    <label>User Age:</label><br />
+    <input type="text" name="Age" /><br />
+    <input type="submit" value="Send" />
+</form>
+
+<p>List of Users</p>
+<ul>
+    @foreach (var person in DataBase.People)
+    {
+        <li>
+            <p>Name: @person.Name</p>
+            <p>Age: @person.Age</p>
+            <a href="@Url.Action("Person", "Api", new { id = Convert.ToBase64String(person.Id.ToByteArray()) })">Download Person</a>
+        </li>
+    }
+</ul>
+
+<p>Send location request</p>
+<a href="@Url.Action("Location", "Api", new {coords = "1,2,3"})">Send request</a>
