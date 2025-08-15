@@ -6,7 +6,7 @@ namespace Custom_Model_Binders.Models;
 [ModelBinder(binderType: typeof(PointBinder))]
 public record class Point
 {
-    public int x { get; set; }
-    public int y { get; set; }
-    public int z { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Z { get; set; }
 }

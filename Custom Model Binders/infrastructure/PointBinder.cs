@@ -21,17 +21,21 @@ public class PointBinder : IModelBinder
 
         int[] coordArray = new int[3];
 
-        bool isInputCorrect = true;
+        int errorsCountInInput = 0;
 
         coordArray = value.Split(',').Select(c => {
             int result;
-            isInputCorrect = int.TryParse(c.Trim(), out result);
+            errorsCountInInput = int.TryParse(c.Trim(), out result) ? errorsCountInInput : ++errorsCountInInput;
             return result;
         }).ToArray();
 
-        if (!isInputCorrect || coordArray.Length != 3) return Task.CompletedTask;
+        if (errorsCountInInput != 0 || coordArray.Length != 3)
+        {
+            bindingContext.ModelState.TryAddModelError(modelName, "Incorrect input. Coords should be numbers in the amount of 3.");
+            return Task.CompletedTask;
+        }
 
-        Point point = new Point() { x = coordArray[0], y = coordArray[1], z = coordArray[2] };
+        Point point = new Point() { X = coordArray[0], Y = coordArray[1], Z = coordArray[2] };
 
         bindingContext.Result = ModelBindingResult.Success(point);
 

@@ -1,5 +1,6 @@
 ﻿using Custom_Model_Binders.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text;
 
 namespace Custom_Model_Binders.infrastructure;
 
@@ -35,7 +36,16 @@ public class PersonBinder : IModelBinder
             return Task.CompletedTask;
         }
 
-        Guid guid = new Guid(byteGuid);
+        Guid guid;
+        try
+        {
+            guid = new Guid(byteGuid);
+        }
+        catch (Exception)
+        {
+            bindingContext.ModelState.TryAddModelError(modelName, "base64 encoded string is not correct");
+            return Task.CompletedTask;
+        }
 
         Person? person = DataBase.People.FirstOrDefault(p => p.Id.Equals(guid));
 

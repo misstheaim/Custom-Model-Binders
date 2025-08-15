@@ -1,5 +1,6 @@
 ﻿using Custom_Model_Binders.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json;
 
 namespace Custom_Model_Binders.Controllers;
@@ -11,6 +12,13 @@ public class ApiController : Controller
     {
         if (point == null)
         {
+            if (!ModelState.IsValid)
+            {
+                if (ModelState.TryGetValue("coords", out var pointEntity))
+                {
+                    return BadRequest(pointEntity.Errors.First().ErrorMessage);
+                }
+            }
             return BadRequest("Incorrect coords input.");
         }
         return Json(point, new JsonSerializerOptions()
@@ -24,6 +32,13 @@ public class ApiController : Controller
     {
         if (person == null)
         {
+            if (!ModelState.IsValid)
+            {
+                if (ModelState.TryGetValue("id", out var pointEntity))
+                {
+                    return BadRequest(pointEntity.Errors.First().ErrorMessage);
+                }
+            }
             return NotFound();
         }
         return Json(person, new JsonSerializerOptions()
