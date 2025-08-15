@@ -10,16 +10,13 @@ public class ApiController : Controller
     [HttpGet]
     public IActionResult Location([FromQuery(Name = "coords")]Point point)
     {
-        if (point == null)
+        if (point == null || !ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.TryGetValue("coords", out var pointEntity))
             {
-                if (ModelState.TryGetValue("coords", out var pointEntity))
-                {
-                    return BadRequest(pointEntity.Errors.First().ErrorMessage);
-                }
+                return BadRequest(pointEntity.Errors.First().ErrorMessage);
             }
-            return BadRequest("Incorrect coords input.");
+            return BadRequest("Incorrect input.");
         }
         return Json(point, new JsonSerializerOptions()
         {
@@ -30,16 +27,13 @@ public class ApiController : Controller
     [HttpGet]
     public IActionResult Person([FromRoute(Name = "id")]Person person)
     {
-        if (person == null)
+        if (person == null || !ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.TryGetValue("id", out var pointEntity))
             {
-                if (ModelState.TryGetValue("id", out var pointEntity))
-                {
-                    return BadRequest(pointEntity.Errors.First().ErrorMessage);
-                }
+                return BadRequest(pointEntity.Errors.First().ErrorMessage);
             }
-            return NotFound();
+            return BadRequest("Incorrect input.");
         }
         return Json(person, new JsonSerializerOptions()
         {

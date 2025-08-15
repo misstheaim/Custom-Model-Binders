@@ -51,6 +51,7 @@ public class PersonBinder : IModelBinder
 
         if (person is null)
         {
+            bindingContext.ModelState.TryAddModelError(modelName, "User with this id is not found.");
             return Task.CompletedTask;
         }
 
